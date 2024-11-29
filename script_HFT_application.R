@@ -16,8 +16,10 @@ source("CausalTimeSeries_fx.R")
 #----------------------------------------------------------------------------------#
 namefile = 'Xall_volume_time.csv';#use full path if needed
  
-# name of the file with intermediate results, use full path if needed
+# name of the files with intermediate results, use a full path if needed
+#these files are generated if, below, flag_first_run = TRUE. Otherwise, they are expected 
 LocalSavedResults = "HFT_application_PC_result.RData"
+lambdaTauCvFilename =  "lambda_tau_cv_hft_empirical.RData"
 
 
 flag_first_run = TRUE # set this to TRUE if it is the first run, 
@@ -122,9 +124,9 @@ if(!loading_from_local_save_results){
    
   if (flag_first_run){
     lambda_tau_cv = get_lambda_tau_cv(seed_num_cv, fold_cv, W, lambda_tau_set)
-    save(lambda_tau_cv,file = "lambda_tau_cv_hft_empirical.RData")
+    save(lambda_tau_cv,file = lambdaTauCvFilename)
   }else{
-    load("lambda_tau_cv_hft_empirical.RData")
+    load(lambdaTauCvFilename)
   }
   
   lambda_cv    = lambda_tau_cv$lambda

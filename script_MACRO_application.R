@@ -24,8 +24,8 @@ source("CausalTimeSeries_fx.R")
 #Changes to be made to use the algorithms in more general context are discussed below.
 
 #----------working directory - data dir
-# indir  = '/home/alessio/Dropbox/Accademic/mypapers/LOBICA/code/reusable_code/code_and_data_to_share/'#"full path in here where data is located"
-# setwd(indir)
+
+dataMacro = "data.csv"#use full path if needed
 
 #-----------------estimation settings
 p_lag = 12# number of lags in latent VAR
@@ -63,7 +63,7 @@ flag_perform_CV = FALSE # set TRUE if you want to perform CV
 #(when we include the instrument we use the same penalty obtained by CV whitout the penalty, so set this to FALSE)
 
 #------ load the data
-data = as.matrix(read.csv(file = "data.csv",header = TRUE))
+data = as.matrix(read.csv(file = dataMacro,header = TRUE))
 #remove first column because it is a date in test data and possibly remove the instrument
 if( flag_use_instrument==FALSE){
   cols2remove = c(1,2)
@@ -220,7 +220,7 @@ if (!is.DAG(g)){
   
   # 
   ####################################################################################
-  #     THE FOLLOWING IS NOT WELL WRITTEN
+  #     THE FOLLOWING COULD BE IMPROVED
   #----------------------------------------------------------------------------------#
   #                                                                   
   # GET IRFS                              
@@ -251,9 +251,9 @@ if (!is.DAG(g)){
   colnames(H_permuted) = col_names_X
   row.names(H_permuted) = col_names_X
   # following Lemma 2 of the paper A^s H_permuted will provide IRFs for the latente VAR  
-  # ?? end
+  # end
   # ------------------------------------------------------------ get the IRFs 
-  # point estimate    ????i DO NOT SEE ANY POINT ESTIMATE OF THE IRFS HERE
+  # 
   f_k_inverse = get_f_k_inverse(X)
   
   # bootstrap for confidence interval 
@@ -274,7 +274,7 @@ if (!is.DAG(g)){
   #                               k_shock_variable = k_shock_variable, 
   #                               delta_shock = delta_shock, seed_num=0,
   #                               flag_shock_Z=FALSE, flag_cum = TRUE)
-  # ???? start
+  # start
   IRFs_X_point_est_all = NULL
   for (ii_kk in 1:length(k_shock_variable)){
     
@@ -295,7 +295,7 @@ if (!is.DAG(g)){
     selected_columns <-  ((  (ii_kk-1)*n_var_schocked+1):( ii_kk*n_var_schocked))
     IRFs_X_point_est[,c(selected_columns)] = IRFs_X_point_est_all[[ii_kk]][, k_shocked_variable]
   }
-  # ???? end
+  # end
   #===================================
   
   tictoc::tic()
@@ -803,7 +803,7 @@ IRF_sparse_upr = IRF_upr_raw#*(1/IRF_avg_raw[1,1])
 IRF_sparse_avg = IRF_avg_raw#*(1/IRF_avg_raw[1,1])
 
 
-#################PLOTS: CLEARLY, THIS SHOULD JUST BE A FUNCTION- HORRIBLE CODE
+#################PLOTS: THIS SHOULD JUST BE A FUNCTION- COULD BE IMPROVED
 
 shock_size  = 10#%
 IRF_kanzig2plot = IRF_kanzig*shock_size
@@ -856,8 +856,4 @@ for (ikshock in 1:length(k_shock_variable)){
 
 
 
-
-
-
-############################end of tests
 
